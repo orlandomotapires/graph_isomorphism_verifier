@@ -1,111 +1,116 @@
-#ifndef LISTASE_H
-#define LISTASE_H
-#include<stdio.h>
-#include<stdlib.h>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-typedef char tp_item;
+typedef struct No{
+    struct Graph* verticeapontado;
+    struct No* proxlista;
+}No;
 
-typedef struct{
-  struct tp_no *adj;
-  struct tp_no *prox;
-  tp_item info;
-}tp_lista;
+typedef struct Graph{
+    char vertice;
+    No* lista;
+}Graph;
 
-typedef struct{
-  struct tp_lista *lista_adj;
-}tp_listase;
-
-typedef struct {
-  tp_listase *lista_principal;
-}graph;
-
-
-tp_listase *inicializa_listase(){
-  return NULL;
+Graph *inicializa_vertice(){//usado
+	return NULL;
 }
 
-int listase_vazia(tp_listase *lista){
-  if(lista==NULL) return 1;
-  else return 0;
+int lista_vertice_vazia(Graph *lista){//usado
+	if(lista==NULL) return 1;
+	return 0;
 }
 
-tp_listase *aloca_listase(){
-  tp_listase *novo_no;
-  novo_no = (tp_listase*) malloc(sizeof(tp_listase));
-  return novo_no;
+int lista_no_vazia(No *lista){//usado
+	if(lista==NULL) return 1;
+	return 0;
 }
 
-tp_listase *procura_elemento_lista_principal(tp_listase *lista, tp_item e){
-  tp_listase *atu;
-  atu = lista;
-  while(atu->prox != NULL){
-    if(atu->info == e){
-      return atu;
-    }
-    atu=atu->prox;
-  }
-
-  return NULL;
+Graph *aloca_vertice(){//usado
+	Graph *novo_vertice;
+	novo_vertice=(Graph*) malloc(sizeof(Graph));
+	return novo_vertice;
 }
 
-tp_listase *procura_elemento_base(graph *lista, int pos){
-  graph *atu;
-  atu = lista;
-
-  int c = 0;
-  while(atu->prox != NULL){
-    if(pos == c){
-      return atu;
-    }
-    atu=atu->prox;
-    c++;
-  }
-
-  return NULL;
+No *aloca_no(){//usado
+  No *novo_no;
+	novo_no=(No*) malloc(sizeof(No));
+	return novo_no;
 }
 
-int insere_listase_no_fim(graph **l, tp_item e){
-  tp_listase *novo_no, *atu;
-  novo_no = aloca_listase();
-  if(novo_no == NULL) return 0;
+int insere_lista_principal(Graph **l, char e){//usado
+	Graph *novo_no, *atu;
+	novo_no=aloca_vertice();
+	novo_no->lista=aloca_no();
+
+  novo_no->vertice=e;
+
+	if(novo_no==NULL || novo_no->lista==NULL) return 0;
   
-  novo_no->info = e;
-  novo_no->adj = procura_elemento_lista_principal(*l, e);
-  novo_no->prox = NULL;
+	if(lista_vertice_vazia(*l)){
+		*l=novo_no;
+	} else{
+		atu=*l;
+		while(atu->lista->verticeapontado!=NULL){
+			atu=atu->lista->verticeapontado;
+		}
+		atu->lista->verticeapontado=novo_no;
+	}
+	return 1;
+}
 
-  if(listase_vazia(*l)){
-    *l = novo_no;
-  } else{
-    atu = *l;
-    while(atu->prox != NULL){
-      atu = atu->prox;
+void imprimeno(No *lista){//usado
+	No *atu;
+	atu=lista;
+  while(atu!=NULL){
+    if(atu->proxlista==NULL){
+    printf(" %c\n", atu->verticeapontado->vertice);
+    atu=atu->proxlista;
+    } else{
+    printf(" %c ->", atu->verticeapontado->vertice);
+		atu=atu->proxlista;
     }
-    atu->prox=novo_no;
-  }
-
-  return 1;
-}
-
-void imprime_listase(tp_listase *lista){
-  tp_listase *atu;
-  atu = lista;
-  
-  printf("\nIMPRIMINDO A LISTA DA LETRA %c\n", atu->info);
-  printf("%c -> ", atu->info);
-  while(atu->adj != NULL){
-    printf("%c ", atu->info);
-    atu = atu->adj; 
   }
 }
 
-void imprime_listase_inteira(tp_listase *lista){
-  tp_listase *atu;
-  atu = lista;
-  while(atu->prox != NULL){  
-    atu=atu->prox;
-    imprime_listase(atu);
-  }
+void imprime(Graph *listacompleta){//usado 
+	Graph *atu;
+  No *aux;
+	atu=listacompleta;
+	while(atu->lista->verticeapontado!=NULL){
+		printf("%c ->", atu->vertice);
+    imprimeno(atu->lista->proxlista);
+    atu=atu->lista->verticeapontado;
+    }
+	}
+
+Graph *busca_vertice(Graph *lista, int i){//usado
+	Graph *atu;
+	atu=lista;
+
+  int c = 1;
+	while((atu!=NULL)&&(i!=c)){
+		atu=atu->lista->verticeapontado; c++;
+	}
+	if (atu==NULL) return NULL;
+	return atu;
 }
 
-
-#endif
+int insere_no_fim(No **l, Graph **e){//usado
+	No *novo_no, *atu;
+	novo_no=aloca_no();
+	if(novo_no==NULL) return 0;
+	novo_no->verticeapontado=*e;
+	novo_no->proxlista=NULL;
+	if(lista_no_vazia(*l)){
+		*l=novo_no;
+	} else{
+		atu=*l;
+		while(atu->proxlista!=NULL){
+			atu=atu->proxlista;
+		}
+		atu->proxlista=novo_no;
+	}
+	return 1;
+}
