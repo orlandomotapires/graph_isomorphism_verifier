@@ -5,15 +5,20 @@
 
 typedef char tp_item;
 
-typedef struct tp_no{
+typedef struct{
   struct tp_no *adj;
   struct tp_no *prox;
   tp_item info;
-}tp_listase;
+}tp_lista;
 
 typedef struct{
-  tp_listase *lista;
+  struct tp_lista *lista_adj;
+}tp_listase;
+
+typedef struct {
+  tp_listase *lista_principal;
 }graph;
+
 
 tp_listase *inicializa_listase(){
   return NULL;
@@ -43,8 +48,8 @@ tp_listase *procura_elemento_lista_principal(tp_listase *lista, tp_item e){
   return NULL;
 }
 
-tp_listase *procura_elemento_base(tp_listase *lista, int pos){
-  tp_listase *atu;
+tp_listase *procura_elemento_base(graph *lista, int pos){
+  graph *atu;
   atu = lista;
 
   int c = 0;
@@ -59,13 +64,13 @@ tp_listase *procura_elemento_base(tp_listase *lista, int pos){
   return NULL;
 }
 
-int insere_listase_no_fim(tp_listase **l, tp_item e){
+int insere_listase_no_fim(graph **l, tp_item e){
   tp_listase *novo_no, *atu;
   novo_no = aloca_listase();
   if(novo_no == NULL) return 0;
   
   novo_no->info = e;
-  novo_no->adj = procura_elemento_lista_principal(l, e);
+  novo_no->adj = procura_elemento_lista_principal(*l, e);
   novo_no->prox = NULL;
 
   if(listase_vazia(*l)){
@@ -85,27 +90,20 @@ void imprime_listase(tp_listase *lista){
   tp_listase *atu;
   atu = lista;
   
+  printf("\nIMPRIMINDO A LISTA DA LETRA %c\n", atu->info);
   printf("%c -> ", atu->info);
-  while(atu->prox != NULL){
-    printf("%c", atu->info);
-    atu = atu -> prox; 
+  while(atu->adj != NULL){
+    printf("%c ", atu->info);
+    atu = atu->adj; 
   }
 }
 
 void imprime_listase_inteira(tp_listase *lista){
   tp_listase *atu;
   atu = lista;
-  int c=0;
-  
   while(atu->prox != NULL){  
     atu=atu->prox;
-    c++;
-
-    printf("\nIMPRIMINDO A LISTA DA LETRA %c\n", atu->info);
-    if(atu->adj != NULL)
-      printf("\nIMPRIMINDO A LISTA DA LETRA adj %c\n", atu->adj->info);
     imprime_listase(atu);
-
   }
 }
 

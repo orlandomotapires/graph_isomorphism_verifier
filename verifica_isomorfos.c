@@ -4,7 +4,7 @@
 
 const int MAX = 1e2 + 10;
 
-graph *g; 
+graph g; 
 
 int main(){
 
@@ -32,15 +32,12 @@ int main(){
         insere_listase_no_fim(&g, linhas[0][i]);
     }  
 
-    for(int i = 1; i < strlen(linhas); i++){
+    for(int i = 1; i < it; i++){
         for(int j = 0; j < strlen(linhas[i]); j++){
             if(linhas[i][j] == '1'){              
                 tp_listase *no_base_correto = procura_elemento_base(g, i);
-                //printf("No_base_correto->info: %c", no_base_correto->info);
-                //printf("\n");
-
-                insere_listase_no_fim(no_base_correto, linhas[0][j]);  
-    
+                //printf("base: %c - destino: %c\n", no_base_correto->info, linhas[0][j]);
+                insere_listase_no_fim(&no_base_correto, linhas[0][j]);    
             }
         }
     }
