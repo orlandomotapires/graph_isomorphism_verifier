@@ -1,7 +1,7 @@
-#include <iostream>
 #include <stdio.h>
 #include <string.h>
 #include "listaSE.h"
+#include "pilha.h"
 
 #define qnt_letras 4
 
@@ -63,7 +63,28 @@ bool vertices_graus_iguais(Graph *graph_a, Graph *graph_b){
 }
 
 bool diagonal_principal_igual(){
-    for(int i = 0; i < qnt_letras; i++) if(matriz_adj_a[i][i] != matriz_adj_b[i][i]) return 0;
+    int result_a[5];
+    int result_b[5];
+
+    result_a[0] = 0;
+    result_b[0] = 0;
+
+    result_a[1] = 0;
+    result_b[1] = 0;
+
+    for(int i = 0; i < qnt_letras; i++){
+        if(matriz_adj_a[i][i] == 1) result_a[1]++;
+        else result_a[0]++;
+    }
+        
+    for(int i = 0; i < qnt_letras; i++){
+        if(matriz_adj_b[i][i] == 1) result_b[1]++;
+        else result_b[0]++;
+    }
+
+    if(result_a[0] != result_b[0]) return 0;
+    else if(result_a[1] != result_b[1]) return 0;
+    
     return 1;
 }
 
@@ -92,6 +113,44 @@ void imprime_matriz(int matriz[50][50]){
     }
 }
 
+bool tem_ciclos(Graph *graph){
+
+    struct Pilha nodos_restantes;
+    int nodos_visitados[500], capacidade = 50;
+
+    memset(nodos_visitados, -1, sizeof(int));
+
+    criarpilha (&nodos_restantes, capacidade);
+    empilhar(&nodos_restantes, 'A');
+
+    while(!estavazia(&nodos_restantes)){
+        int no_atu = desempilhar(&nodos_restantes);
+        nodos_visitados[no_atu] = 1;
+
+        Graph *aux;
+        aux = inicializa_vertice();
+        aux = busca_vertice(graph, no_atu - 64);
+
+        No *vizinhos = aux->lista_principal;
+        vizinhos = vizinhos->lista_adj;
+
+        while(vizinhos->lista_adj != NULL){
+            vizinhos = vizinhos->lista_adj;
+
+            char letra_atu = vizinhos->letra_apontada->letra;
+
+            if(nodos_visitados[letra_atu] == 1){
+                printf("Achei um ciclo! %c\n", letra_atu);
+                return true;
+            }
+            empilhar(&nodos_restantes, letra_atu);
+        }
+    }
+
+    printf("Não achei um ciclo!\n");
+    return false;
+}
+
 /*
 bool relaciona_verticeA_verticeB(int i, int j){
 
@@ -114,15 +173,14 @@ bool brute_force(Graph *graph_a, Graph *graph_b){
 
 */
 
-
 int verifica_isormorfismo(Graph *graph_a, Graph *graph_b){
+    if(tem_ciclos(graph_a) != tem_ciclos(graph_b)) return 0;
     if(!grafos_tamanhos_iguais(graph_a, graph_b)) return 0;
     else if(!vertices_graus_iguais(graph_a, graph_b)) return 0;
     else if(!diagonal_principal_igual()) return 0;
     else if(!ambos_digrafos_ou_ambos_grafos_normais()) return 0;
     else return 1;
 }
-
 
 
 int main() {
