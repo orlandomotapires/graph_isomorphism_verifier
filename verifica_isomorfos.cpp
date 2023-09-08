@@ -62,28 +62,25 @@ bool vertices_graus_iguais(Graph *graph_a, Graph *graph_b){
     return true;
 }
 
+void imprime_matriz(int matriz[50][50]){
+    for(int i =0; i < qnt_letras; i++){
+        for(int j=0; j < qnt_letras; j++){
+            printf("%c ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 bool diagonal_principal_igual(){
-    int result_a[5];
-    int result_b[5];
+    int qnt_1_a = 0, qnt_1_b = 0;
 
-    result_a[0] = 0;
-    result_b[0] = 0;
-
-    result_a[1] = 0;
-    result_b[1] = 0;
-
-    for(int i = 0; i < qnt_letras; i++){
-        if(matriz_adj_a[i][i] == 1) result_a[1]++;
-        else result_a[0]++;
-    }
+    for(int i = 0; i < qnt_letras; i++) {
         
-    for(int i = 0; i < qnt_letras; i++){
-        if(matriz_adj_b[i][i] == 1) result_b[1]++;
-        else result_b[0]++;
+        if(matriz_adj_a[i][i] == '1') qnt_1_a++;
+        if(matriz_adj_b[i][i] == '1') qnt_1_b++;
     }
 
-    if(result_a[0] != result_b[0]) return 0;
-    else if(result_a[1] != result_b[1]) return 0;
+    if(qnt_1_a != qnt_1_b)return 0;
     
     return 1;
 }
@@ -102,15 +99,6 @@ bool linha_coluna_iguais(int matriz_adj_atu[50][50]){
 bool ambos_digrafos_ou_ambos_grafos_normais(){
     if(linha_coluna_iguais(matriz_adj_a) == linha_coluna_iguais(matriz_adj_b)) return 1;
     return 0;
-}
-
-void imprime_matriz(int matriz[50][50]){
-    for(int i =0; i < qnt_letras; i++){
-        for(int j=0; j < qnt_letras; j++){
-            printf("%c ", matriz[i][j]);
-        }
-        printf("\n");
-    }
 }
 
 bool tem_ciclos(Graph *graph){
@@ -140,14 +128,14 @@ bool tem_ciclos(Graph *graph){
             char letra_atu = vizinhos->letra_apontada->letra;
 
             if(nodos_visitados[letra_atu] == 1){
-                printf("Achei um ciclo! %c\n", letra_atu);
+                //printf("Achei um ciclo! %c\n", letra_atu);
                 return true;
             }
             empilhar(&nodos_restantes, letra_atu);
         }
     }
 
-    printf("Não achei um ciclo!\n");
+    //printf("Não achei um ciclo!\n");
     return false;
 }
 
@@ -174,14 +162,28 @@ bool brute_force(Graph *graph_a, Graph *graph_b){
 */
 
 int verifica_isormorfismo(Graph *graph_a, Graph *graph_b){
-    if(tem_ciclos(graph_a) != tem_ciclos(graph_b)) return 0;
-    if(!grafos_tamanhos_iguais(graph_a, graph_b)) return 0;
-    else if(!vertices_graus_iguais(graph_a, graph_b)) return 0;
-    else if(!diagonal_principal_igual()) return 0;
-    else if(!ambos_digrafos_ou_ambos_grafos_normais()) return 0;
+    if(!diagonal_principal_igual()){
+        printf("Caiu na: diagonal_principal_igual() \n");
+        return 0;
+    }
+    else if(!grafos_tamanhos_iguais(graph_a, graph_b)){
+        printf("Caiu na: grafos_tamanhos_iguais() \n");
+        return 0;
+    }
+    else if(!vertices_graus_iguais(graph_a, graph_b)) {
+        printf("Caiu na: vertices_graus_iguais() \n");
+        return 0;
+    }
+    else if(tem_ciclos(graph_a) != tem_ciclos(graph_b)) {
+        printf("Caiu na: tem_ciclos() \n");
+        return 0;
+    }
+    else if(!ambos_digrafos_ou_ambos_grafos_normais()) {
+        printf("Caiu na: ambos_digrafos_ou_ambos_grafos_normais() \n");
+        return 0;
+    }
     else return 1;
 }
-
 
 int main() {
     FILE *arq_a, *arq_b;
