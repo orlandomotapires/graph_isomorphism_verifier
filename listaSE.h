@@ -17,7 +17,7 @@ Graph *inicializa_vertice(){
 	return NULL;
 }
 
-int lista_vertice_vazia(Graph *lista){
+int grafo_vazio(Graph *lista){
 	if(lista==NULL) return 1;
 	return 0;
 }
@@ -27,13 +27,13 @@ int lista_no_vazia(No *lista){
 	return 0;
 }
 
-Graph *aloca_vertice(){
+Graph *aloca_grafo(){
 	Graph *novo_vertice;
 	novo_vertice=(Graph*) malloc(sizeof(Graph));
 	return novo_vertice;
 }
 
-No *aloca_no(){//usado
+No *aloca_no(){
   No *novo_no;
 	novo_no=(No*) malloc(sizeof(No));
 	return novo_no;
@@ -41,14 +41,14 @@ No *aloca_no(){//usado
 
 int insere_lista_principal(Graph **l, char e){
 	Graph *novo_no, *atu;
-	novo_no=aloca_vertice();
+	novo_no=aloca_grafo();
 	novo_no->lista_principal=aloca_no();
 
 	novo_no->letra=e;
 
 	if(novo_no==NULL || novo_no->lista_principal==NULL) return 0;
   
-	if(lista_vertice_vazia(*l)){
+	if(grafo_vazio(*l)){
 		*l=novo_no;
 	} else{
 		atu=*l;
@@ -84,7 +84,7 @@ int grau_do_vertice(No *lista){
 	return tam;
 }
 
-int tam_lista_completa(Graph *listacompleta){
+int tam_lista_principal(Graph *listacompleta){
 	Graph *atu;
 	atu=listacompleta;
 	
@@ -100,7 +100,7 @@ int tam_lista_completa(Graph *listacompleta){
 int *pega_todos_graus(Graph *listacompleta){
 	int *graus;
 
-	graus = (int *) malloc(tam_lista_completa(listacompleta) * sizeof(int));
+	graus = (int *) malloc(tam_lista_principal(listacompleta) * sizeof(int));
 
 	Graph *atu;
 	atu=listacompleta;
@@ -134,7 +134,7 @@ int insere_no_fim(No **l, Graph **e){
 	return 1;
 }
 
-void imprimeno(No *lista){
+void imprime_no(No *lista){
 	No *atu;
 	atu=lista;
 	while(atu!=NULL){
@@ -148,14 +148,15 @@ void imprimeno(No *lista){
 	}
 }
 
-void imprime(Graph *listacompleta){
+void imprime_grafo_completo(Graph *listacompleta){
 	Graph *atu;
 	No *aux;
 	atu=listacompleta;
 	while(atu->lista_principal->letra_apontada!=NULL){
 		if(atu->letra != ' ')
 		printf("%c ->", atu->letra);
-		imprimeno(atu->lista_principal->lista_adj);
+		imprime_no(atu->lista_principal->lista_adj);
 		atu=atu->lista_principal->letra_apontada;
     }
 }
+

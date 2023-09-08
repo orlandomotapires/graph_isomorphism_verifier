@@ -33,7 +33,7 @@ void le_arquivo_cria_grafo(Graph **graph_a, FILE *arq){
 }
 
 bool grafos_tamanhos_iguais(Graph *graph_a, Graph *graph_b){
-    return tam_lista_completa(graph_a) == tam_lista_completa(graph_b);
+    return tam_lista_principal(graph_a) == tam_lista_principal(graph_b);
 }
 
 bool vertices_graus_iguais(Graph *graph_a, Graph *graph_b){
@@ -42,16 +42,37 @@ bool vertices_graus_iguais(Graph *graph_a, Graph *graph_b){
     graus_a = pega_todos_graus(graph_a);
     graus_b = pega_todos_graus(graph_b);
 
-    for(int i = 0; i < tam_lista_completa(graph_a); i++){
+    for(int i = 0; i < tam_lista_principal(graph_a); i++){
         if(graus_a[i] != graus_b[i]) return false;
     }
 
     return true;
 }
 
+bool relaciona_verticeA_verticeB(int i, int j){
+
+}
+
+bool brute_force(Graph *graph_a, Graph *graph_b){
+    int *graus_a, *graus_b;
+
+    graus_a = pega_todos_graus(graph_a);
+    graus_b = pega_todos_graus(graph_b);
+
+    for(int i = 0; i < tam_lista_principal(graph_a); i++){
+        for(int j = i; j < tam_lista_principal(graph_a); j++){
+            if(relaciona_verticeA_verticeB(i, j)){
+                break;
+            }
+        }
+        
+    }
+}
+
 int verifica_isormorfismo(Graph *graph_a, Graph *graph_b){
     if(!grafos_tamanhos_iguais(graph_a, graph_b)) return 0;
     else if(!vertices_graus_iguais(graph_a, graph_b)) return 0;
+    else if(!brute_force(graph_a, graph_b)) return 0;
     else return 1;
 }
 
