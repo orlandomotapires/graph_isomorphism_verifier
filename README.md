@@ -38,17 +38,17 @@ The limitations of current graph isomorphism verification include:
 
 ## Code Files
 
-### [graph.h](graph.h)
+### [graph.h](./libraries/graph.h)
 
 - Purpose: Header file defining data structures and functions related to graphs.
 - Details: This file defines essential structures and operations for creating and manipulating graphs, such as vertices and edges.
 
-### [isomorphism.h](isomorphism.h)
+### [isomorphism.h](./libraries/isomorphism.h)
 
 - Purpose: Header file containing declarations for functions related to graph isomorphism.
 - Details: This file defines functions and data structures used for checking graph isomorphism, including comparisons and verifications.
 
-### [stack.h](stack.h)
+### [stack.h](./libraries/stack.h)
 
 - Purpose: Header file defining a stack data structure.
 - Details: This file defines a stack data structure and relevant operations, which are utilized in the isomorphism checking process.
@@ -56,9 +56,9 @@ The limitations of current graph isomorphism verification include:
 ### [verify_isomorphism.c](verify_isomorphism.c)
 
 - Purpose: Implementation file containing the main program for verifying graph isomorphism.
-- Details: This file contains the main logic for reading adjacency matrices from files ([adj_a.txt](adj_a.txt) and [adj_b.txt](adj_b.txt)), creating graphs, and checking isomorphism between them using various conditions and algorithms.
+- Details: This file contains the main logic for reading adjacency matrices from files ([adj_a.txt](./matrixes/adj_a.txt) and [adj_b.txt](./matrixes/adj_b.txt)), creating graphs, and checking isomorphism between them using various conditions and algorithms.
 
-### [adj_a.txt](adj_a.txt) and [adj_b.txt](adj_b.txt)
+### [adj_a.txt](./matrixes/adj_a.txt) and [adj_b.txt](./matrixes/adj_b.txt)
 
 - Purpose: Text files containing adjacency matrices for two graphs.
 - Details: These files represent the adjacency matrices of the two graphs (graph A and graph B) to be compared for isomorphism. Each element in the matrix represents an edge between vertices.

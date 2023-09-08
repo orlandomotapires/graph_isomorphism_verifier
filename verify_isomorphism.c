@@ -1,11 +1,11 @@
-#include "isomorphism.h"
+#include "./libraries/isomorphism.h"
 
 int main() {
     FILE *file_a, *file_b;
     Graph *graph_a, *graph_b;
 
-    file_a = fopen("adj_a.txt", "rt");
-    file_b = fopen("adj_b.txt", "rt");
+    file_a = fopen("./matrixes/adj_a.txt", "rt");
+    file_b = fopen("./matrixes/adj_b.txt", "rt");
 
     graph_a = initialize_vertex();
     graph_b = initialize_vertex();
