@@ -4,13 +4,13 @@
 #include <string.h>
 
 typedef struct No{
-    struct Graph* verticeapontado;
-    struct No* proxlista;
+    struct Graph* letra_apontada;
+    struct No* lista_adj;
 }No;
 
 typedef struct Graph{
-    char vertice;
-    No* lista;
+    char letra;
+    No* lista_principal;
 }Graph;
 
 Graph *inicializa_vertice(){
@@ -42,20 +42,20 @@ No *aloca_no(){//usado
 int insere_lista_principal(Graph **l, char e){
 	Graph *novo_no, *atu;
 	novo_no=aloca_vertice();
-	novo_no->lista=aloca_no();
+	novo_no->lista_principal=aloca_no();
 
-	novo_no->vertice=e;
+	novo_no->letra=e;
 
-	if(novo_no==NULL || novo_no->lista==NULL) return 0;
+	if(novo_no==NULL || novo_no->lista_principal==NULL) return 0;
   
 	if(lista_vertice_vazia(*l)){
 		*l=novo_no;
 	} else{
 		atu=*l;
-		while(atu->lista->verticeapontado!=NULL){
-			atu=atu->lista->verticeapontado;
+		while(atu->lista_principal->letra_apontada!=NULL){
+			atu=atu->lista_principal->letra_apontada;
 		}
-		atu->lista->verticeapontado=novo_no;
+		atu->lista_principal->letra_apontada=novo_no;
 	}
 	return 1;
 }
@@ -66,38 +66,70 @@ Graph *busca_vertice(Graph *lista, int i){
 
 	int c = 1;
 	while((atu!=NULL)&&(i!=c)){
-		atu=atu->lista->verticeapontado; c++;
+		atu=atu->lista_principal->letra_apontada; c++;
 	}
 	if (atu==NULL) return NULL;
 	return atu;
 }
 
-int grau_do_vertice(No *lista, int i){
+int grau_do_vertice(No *lista){
 	No *atu;
 	atu=lista;
 
 	int tam = 0;
 	while((atu!=NULL)){
-		atu=atu->proxlista;
+		atu=atu->lista_adj;
 		tam++;
 	}
 	return tam;
+}
+
+int tam_lista_completa(Graph *listacompleta){
+	Graph *atu;
+	atu=listacompleta;
+	
+	int tam = 0;
+	while(atu->lista_principal->letra_apontada!=NULL){
+		atu=atu->lista_principal->letra_apontada;
+		tam++;
+    }
+
+	return tam;
+}
+
+int *pega_todos_graus(Graph *listacompleta){
+	int *graus;
+
+	graus = (int *) malloc(tam_lista_completa(listacompleta) * sizeof(int));
+
+	Graph *atu;
+	atu=listacompleta;
+	
+	int i = 0;
+	while(atu->lista_principal->lista_adj!=NULL){
+		int grau = grau_do_vertice(atu->lista_principal->lista_adj);
+		graus[i] = grau;
+		atu=atu->lista_principal->letra_apontada;
+		i++;
+    }
+
+	return graus;
 }
 
 int insere_no_fim(No **l, Graph **e){
 	No *novo_no, *atu;
 	novo_no=aloca_no();
 	if(novo_no==NULL) return 0;
-	novo_no->verticeapontado=*e;
-	novo_no->proxlista=NULL;
+	novo_no->letra_apontada=*e;
+	novo_no->lista_adj=NULL;
 	if(lista_no_vazia(*l)){
 		*l=novo_no;
 	} else{
 		atu=*l;
-		while(atu->proxlista!=NULL){
-			atu=atu->proxlista;
+		while(atu->lista_adj!=NULL){
+			atu=atu->lista_adj;
 		}
-		atu->proxlista=novo_no;
+		atu->lista_adj=novo_no;
 	}
 	return 1;
 }
@@ -106,12 +138,12 @@ void imprimeno(No *lista){
 	No *atu;
 	atu=lista;
 	while(atu!=NULL){
-		if(atu->proxlista==NULL){
-			printf(" %c\n", atu->verticeapontado->vertice);
-			atu=atu->proxlista;
+		if(atu->lista_adj==NULL){
+			printf(" %c\n", atu->letra_apontada->letra);
+			atu=atu->lista_adj;
 		} else{
-			printf(" %c ->", atu->verticeapontado->vertice);
-			atu=atu->proxlista;
+			printf(" %c ->", atu->letra_apontada->letra);
+			atu=atu->lista_adj;
 		}
 	}
 }
@@ -120,9 +152,10 @@ void imprime(Graph *listacompleta){
 	Graph *atu;
 	No *aux;
 	atu=listacompleta;
-	while(atu->lista->verticeapontado!=NULL){
-		printf("%c ->", atu->vertice);
-		imprimeno(atu->lista->proxlista);
-		atu=atu->lista->verticeapontado;
+	while(atu->lista_principal->letra_apontada!=NULL){
+		if(atu->letra != ' ')
+		printf("%c ->", atu->letra);
+		imprimeno(atu->lista_principal->lista_adj);
+		atu=atu->lista_principal->letra_apontada;
     }
 }
