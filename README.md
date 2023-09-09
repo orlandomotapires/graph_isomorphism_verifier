@@ -67,5 +67,5 @@ In summary, the code files collectively provide the tools and logic needed to re
 
 ## Additional References
 
-- [MIT OpenCourseWare: Graph Isomorphism](https://www.youtube.com/watch?v=eHZifpgyH_4&ab_channel=MITOpenCourseWare)
+- [MIT OpenCourseWare: Complexity: P, NP, NP-completeness, Reductions](https://www.youtube.com/watch?v=eHZifpgyH_4&ab_channel=MITOpenCourseWare)
 - [Master's Thesis on Graph Isomorphism](https://repositorio.ufsc.br/bitstream/handle/123456789/218147/TCC.pdf?sequence=1&isAllowed=y)
