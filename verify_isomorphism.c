@@ -18,7 +18,12 @@ int main() {
     read_file_create_graph(&graph_a, file_a, 0);
     read_file_create_graph(&graph_b, file_b, 1); // Need this to create the adjacency_matrix_b for start the permutations on the brute_force
 
-    if (brute_force(graph_a)) printf("They are isomorphic!\n");
+    /* 
+        Verifying if they are isomorphic with the brute_force. The brute_force just call the is_isomorphism (check the isomorphism between two graphs) function of each one possible 
+        permutation from the original graph. If any one of all the possible permutations pass, they are isomorphic.
+    */
+
+    if (brute_force(graph_a)) printf("They are isomorphic!\n"); 
     else printf("They are not isomorphic!\n");
 
     fclose(file_a);
