@@ -21,7 +21,6 @@ int adjacency_matrix_b[50][50];
 
    Returns: void
 */
-
 void read_file_create_graph(Graph **graph, FILE *file, int graph_num);
 
 /* 
@@ -98,6 +97,25 @@ bool both_digraphs_or_both_normal_graphs();
 bool has_cycles(Graph *graph);
 
 /* 
+   Function: get_num_edges
+   Description: Counts the number of '1's in the upper triangular part of a matrix.
+
+   Parameters:
+   - matrix_adj: The adjacency matrix to be counted.
+
+   Returns: int (the number of '1's)
+*/
+int get_num_edges(int matrix_adj[50][50]);
+
+/* 
+   Function: num_edges_are_equal
+   Description: Checks if the number of edges in both graphs is equal.
+
+   Returns: bool (true if the number of edges is equal, false otherwise)
+*/
+bool num_edges_are_equal();
+
+/* 
    Function: is_a_isomorphism
    Description: Checks if two graphs are isomorphic based on various conditions.
 
@@ -105,17 +123,24 @@ bool has_cycles(Graph *graph);
    - graph_a: Pointer to the first graph.
    - graph_b: Pointer to the second graph.
 
-   Returns: int (1 if the graphs are isomorphic, 0 otherwise)
+   Returns: bool (true if the graphs are isomorphic, false otherwise)
 */
 bool is_a_isomorphism(Graph *graph_a, Graph *graph_b);
 
-int get_num_edges(int matrix_adj[50][50]);
+/* 
+   Function: brute_force
+   Description: Performs a brute-force isomorphism check.
 
-bool num_vertices_are_equal();
+   Parameters:
+   - graph_a: Pointer to the first graph.
+
+   Returns: bool (true if the graphs are isomorphic, false otherwise)
+*/
+bool brute_force(Graph *graph_a);
 
 /*******************
  * Function Implementations
- *******************/
+*******************/
 
 void read_file_create_graph(Graph **graph, FILE *file, int graph_num) {
     int a, i = 0;
@@ -123,11 +148,11 @@ void read_file_create_graph(Graph **graph, FILE *file, int graph_num) {
 
     Graph *node_to_insert, *base_node;
 
-    node_to_insert = initialize_vertex();
-    base_node = initialize_vertex();
+    node_to_insert = initialize_graph();
+    base_node = initialize_graph();
     
     if (fgets(Line, 100, file)) {
-        for (a = 0; a <= (strlen(Line)); a++) {
+        for (a = 0; a < (strlen(Line)); a++) {
             if (Line[a] != ' ') insert_main_list(graph, Line[a]);   
         }
     }
@@ -166,18 +191,18 @@ bool vertices_have_equal_degrees(Graph *graph_a, Graph *graph_b) {
     degrees_a = get_all_degrees(graph_a);
     degrees_b = get_all_degrees(graph_b);
 
-    int posicional_degrees_a[size], posicional_degrees_b[size]; 
+    int positional_degrees_a[size], positional_degrees_b[size]; 
 
-    memset(posicional_degrees_a, 0, size * sizeof(int));
-    memset(posicional_degrees_b, 0, size * sizeof(int));
+    memset(positional_degrees_a, 0, size * sizeof(int));
+    memset(positional_degrees_b, 0, size * sizeof(int));
 
     for(int i = 0; i < size; i++){
-        posicional_degrees_a[degrees_a[i]]++; // Insert the degrees on the position and sum 1 for each vertex with that degree
-        posicional_degrees_b[degrees_b[i]]++;
+        positional_degrees_a[degrees_a[i]]++; // Insert the degrees on the position and sum 1 for each vertex with that degree
+        positional_degrees_b[degrees_b[i]]++;
     }
 
     for (int i = 0; i < size; i++) {
-        if (posicional_degrees_a[i] != posicional_degrees_b[i]) return false;
+        if (positional_degrees_a[i] != positional_degrees_b[i]) return false;
     }
 
     return true;
@@ -235,7 +260,7 @@ bool has_cycles(Graph *graph) {
         visited_nodes[current_node] = 1;
 
         Graph *aux;
-        aux = initialize_vertex();
+        aux = initialize_graph();
         aux = find_vertex(graph, current_node - 64);
 
         Node *neighbors = aux->main_list;
@@ -259,7 +284,7 @@ bool has_cycles(Graph *graph) {
 }
 
 int get_num_edges(int matrix_adj[50][50]){
-   int num_ones = 0; 
+    int num_ones = 0; 
     
     for(int i = 0; i < 4; i++){
         for(int j = i+1; j < 4; j++)
@@ -269,49 +294,100 @@ int get_num_edges(int matrix_adj[50][50]){
     return num_ones;
 }
 
-bool num_vertices_are_equal(){
+bool num_edges_are_equal(){
     return get_num_edges(adjacency_matrix_a) == get_num_edges(adjacency_matrix_b);
 }
 
 bool is_a_isomorphism(Graph *graph_a, Graph *graph_b){
     if (!main_diagonal_have_the_same_numbers_of_1()) {
-        printf("Fell into: main_diagonal_have_the_same_numbers_of_1() \n");
+        //printf("Fell into: main_diagonal_have_the_same_numbers_of_1() \n");
         return false;
-    } else if (!num_vertices_are_equal()) {
-        printf("Fell into: num_vertices_are_equal() \n");
+    } else if (!num_edges_are_equal()) {
+        //printf("Fell into: num_edges_are_equal() \n");
         return false;
     }else if (!graphs_have_equal_number_of_vertices(graph_a, graph_b)) {
-        printf("Fell into: graphs_have_equal_number_of_vertices() \n");
+        //printf("Fell into: graphs_have_equal_number_of_vertices() \n");
         return false;
     } else if (!vertices_have_equal_degrees(graph_a, graph_b)) {
-        printf("Fell into: vertices_have_equal_degrees() \n");
+        //printf("Fell into: vertices_have_equal_degrees() \n");
         return false;
     } else if (has_cycles(graph_a) != has_cycles(graph_b)) {
-        printf("Fell into: has_cycles() \n");
+        //printf("Fell into: has_cycles() \n");
         return false;
     } else if (!both_digraphs_or_both_normal_graphs()) {
-        printf("Fell into: both_digraphs_or_both_normal_graphs() \n");
+        //printf("Fell into: both_digraphs_or_both_normal_graphs() \n");
         return false;
     } else return true;
 }
 
-/*
-bool relates_vertexA_vertexB(int i, int j){
+/*******************
+ * BRUTE FORCE PART
+*******************/
 
-}
-bool brute_force(Graph *graph_a, Graph *graph_b){
-    int *degrees_a, *degrees_b;
+int visited[4] = {0};  // Initially, all columns are unvisited
+int permutations[24][4][4];  // Matrix to store permutations
 
-    degrees_a = get_all_degrees(graph_a);
-    degrees_b = get_all_degrees(graph_b);
-
-    for(int i = 0; i < main_list_size(graph_a); i++){
-        for(int j = i; j < main_list_size(graph_a); j++){
-            if(relates_vertexA_vertexB(i, j)){
-                break;
-            }
-        }
-        
+void swap(int col1, int col2) {
+    for (int row = 0; row < 4; row++) {
+        int temp = adjacency_matrix_b[row][col1];
+        adjacency_matrix_b[row][col1] = adjacency_matrix_b[row][col2];
+        adjacency_matrix_b[row][col2] = temp;
     }
 }
-*/
+
+void generatePermutations(int col) {
+    if (col == 4) {
+        static int count = 0;
+        // Store the current matrix as a valid permutation
+        for (int row = 0; row < 4; row++) {
+            for (int c = 0; c < 4; c++) {
+                permutations[count][row][c] = adjacency_matrix_b[row][c];
+            }
+        }
+        count++;
+    } else {
+        for (int i = 0; i < 4; i++) {
+            if (!visited[i]) {
+                visited[i] = 1;
+                swap(col, i);
+                generatePermutations(col + 1);
+                swap(col, i);  // Undo the swap for the next iteration
+                visited[i] = 0;
+            }
+        }
+    }
+}
+
+void read_matrix_create_graph(Graph **graph, int matrix_actu[50][4]) {
+    Graph *node_to_insert, *base_node;
+
+    node_to_insert = initialize_graph();
+    base_node = initialize_graph();
+   
+    for (int a = 0; a <= 4; a++) insert_main_list(graph, 'A' + a);  
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            if (matrix_actu[i][j] == '1') {
+                node_to_insert = find_vertex(*graph, j+1);
+                base_node = find_vertex(*graph, (i + 1));
+                insert_at_end_adj_list(&node_to_insert->main_list, &base_node);
+            }
+        } 
+    }
+}
+
+bool brute_force(Graph *graph){
+    Graph *graph_actu;
+
+    int num_permutations = 24;
+    generatePermutations(0);
+
+    for(int i = 0; i < num_permutations; i++){
+        graph_actu = initialize_graph();
+        read_matrix_create_graph(&graph_actu, permutations[i]);     
+        if(is_a_isomorphism(graph, graph_actu)) return true;
+    }
+
+    return false;
+}
