@@ -23,8 +23,7 @@ int main() {
         permutation from the original graph. If any one of all the possible permutations pass, they are isomorphic.
     */
 
-    if (brute_force(graph_a)) printf("They are isomorphic!\n"); 
-    else printf("They are not isomorphic!\n");
+    if(!brute_force(graph_a)) printf("They are isomorphic!\n");
 
     fclose(file_a);
     fclose(file_b);

@@ -335,7 +335,7 @@ void swap(int col1, int col2) {
     }
 }
 
-void generatePermutations(int col) {
+void generate_permutations(int col) {
     if (col == 4) {
         static int count = 0;
         // Store the current matrix as a valid permutation
@@ -350,7 +350,7 @@ void generatePermutations(int col) {
             if (!visited[i]) {
                 visited[i] = 1;
                 swap(col, i);
-                generatePermutations(col + 1);
+                generate_permutations(col + 1);
                 swap(col, i);  // Undo the swap for the next iteration
                 visited[i] = 0;
             }
@@ -377,16 +377,58 @@ void read_matrix_create_graph(Graph **graph, int matrix_actu[50][4]) {
     }
 }
 
+
+// Função para trocar dois elementos de um vetor de caracteres
+void swap_char(char* a, char* b) {
+    char temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Função para gerar todas as permutações de um vetor de caracteres
+void generate_permutations_char(char permutation[4], int start, int end, char permutations[24][4]) {
+    static int count = 0; // Contador para armazenar as permutações
+
+    if (start == end) {
+        // Uma permutação completa foi gerada, armazene-a no vetor de permutações
+        for (int i = 0; i < 4; i++) {
+            permutations[count][i] = permutation[i];
+        }
+        count++;
+    } else {
+        for (int i = start; i <= end; i++) {
+            swap_char(&permutation[start], &permutation[i]);
+            generate_permutations_char(permutation, start + 1, end, permutations);
+            swap_char(&permutation[start], &permutation[i]); // Desfaz a troca para a próxima iteração
+        }
+    }
+}
+
+char permutations_char[24][4];
+
 bool brute_force(Graph *graph){
     Graph *graph_actu;
 
     int num_permutations = 24;
-    generatePermutations(0);
+    generate_permutations(0);
+
+    char elements[4] = {'A', 'B', 'C', 'D'};
+    generate_permutations_char(elements, 0, 3, permutations_char);
 
     for(int i = 0; i < num_permutations; i++){
         graph_actu = initialize_graph();
-        read_matrix_create_graph(&graph_actu, permutations[i]);     
-        if(is_a_isomorphism(graph, graph_actu)) return true;
+        read_matrix_create_graph(&graph_actu, permutations[i]);
+
+        if(is_a_isomorphism(graph, graph_actu)){
+
+            printf("They are isomorphic!\n");
+
+            printf("Isomorphism function: \n");
+            for(int k = 0; k < 4; k++)
+                printf("%c -> %c\n", elements[k], permutations_char[i][k]);
+            
+            return true;
+        }
     }
 
     return false;
