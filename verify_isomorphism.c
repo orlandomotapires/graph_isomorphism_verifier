@@ -10,7 +10,7 @@ int main() {
     graph_a = initialize_vertex();
     graph_b = initialize_vertex();
 
-    if (file_a == NULL) {
+    if (file_a == NULL || file_b == NULL) {
         printf("Problems opening the file\n");
         return 1;
     }
@@ -21,7 +21,7 @@ int main() {
     fclose(file_a);
     fclose(file_b);
 
-    if (check_isomorphism(graph_a, graph_b)) printf("They are isomorphic!\n");
+    if (is_a_isomorphism(graph_a, graph_b)) printf("They are isomorphic!\n");
     else printf("They are not isomorphic!\n");
 
     return 0;
