@@ -321,6 +321,37 @@ bool is_a_isomorphism(Graph *graph_a, Graph *graph_b){
 }
 
 /*******************
+ * Isomorphism Function
+*******************/
+
+void swap_char(char* a, char* b) {
+    char temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Function to generate all the possible permutations of the initial letters
+void generate_permutations_char(char permutation[4], int start, int end, char permutations[24][4]) {
+    static int count = 0; // Contador para armazenar as permutações
+
+    if (start == end) {
+        // Uma permutação completa foi gerada, armazene-a no vetor de permutações
+        for (int i = 0; i < 4; i++) {
+            permutations[count][i] = permutation[i];
+        }
+        count++;
+    } else {
+        for (int i = start; i <= end; i++) {
+            swap_char(&permutation[start], &permutation[i]);
+            generate_permutations_char(permutation, start + 1, end, permutations);
+            swap_char(&permutation[start], &permutation[i]); // Desfaz a troca para a próxima iteração
+        }
+    }
+}
+
+char permutations_char[24][4];
+
+/*******************
  * BRUTE FORCE PART
 *******************/
 
@@ -376,35 +407,6 @@ void read_matrix_create_graph(Graph **graph, int matrix_actu[50][4]) {
         } 
     }
 }
-
-
-// Função para trocar dois elementos de um vetor de caracteres
-void swap_char(char* a, char* b) {
-    char temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-// Função para gerar todas as permutações de um vetor de caracteres
-void generate_permutations_char(char permutation[4], int start, int end, char permutations[24][4]) {
-    static int count = 0; // Contador para armazenar as permutações
-
-    if (start == end) {
-        // Uma permutação completa foi gerada, armazene-a no vetor de permutações
-        for (int i = 0; i < 4; i++) {
-            permutations[count][i] = permutation[i];
-        }
-        count++;
-    } else {
-        for (int i = start; i <= end; i++) {
-            swap_char(&permutation[start], &permutation[i]);
-            generate_permutations_char(permutation, start + 1, end, permutations);
-            swap_char(&permutation[start], &permutation[i]); // Desfaz a troca para a próxima iteração
-        }
-    }
-}
-
-char permutations_char[24][4];
 
 bool brute_force(Graph *graph){
     Graph *graph_actu;
