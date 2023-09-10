@@ -1,3 +1,11 @@
+/*
+Authors:
+
+    Orlando Mota Pires https://github.com/orlandomotapires
+    Pedro Menezes https://github.com/pedromenezes49
+
+*/
+
 #include "./libraries/isomorphism.h"
 
 int main() {
